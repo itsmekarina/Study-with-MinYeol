@@ -983,8 +983,8 @@ const _le=logEv;
 logEv=function(wordId,f){if(f&&f.type==='read'&&f.original){const x=items.find(a=>a.id===wordId);if(x&&isV(x)){const n=String(f.note||'').split(' · ');addSense(x,{text:x.phrase,context:f.original,source:n[0]||'',title:n.slice(1).join(' · ')});refreshDetail()}}return _le(wordId,f)};
 /* ---------- giao diện chi tiết ---------- */
 const hi6=(c,p)=>typeof hi==='function'?hi(c,p):esc(c);
-const exLines=x=>String(x.example||'').split('\n').map(z=>z.replace(/^\s*(?:[•\-*]|\d+[.)])\s+/,'').replace(/^\s*[•*]\s*/,'').trim()).filter(Boolean);
-const setEx=(x,a)=>{x.example=a.join('\n');x.updatedAt=now();persist();send(x)};
+const exLines=x=>{const seen=new Set();return String(x.example||'').split('\n').map(z=>z.replace(/^\s*(?:[•\-*]|\d+[.)])\s+/,'').replace(/^\s*[•*]\s*/,'').trim()).filter(z=>{const k=textKey6(z.split(' — ')[0]);if(!k||seen.has(k))return false;seen.add(k);return true})};
+const setEx=(x,a)=>{const seen=new Set();a=a.filter(z=>{const k=textKey6(String(z).split(' — ')[0]);if(!k||seen.has(k))return false;seen.add(k);return true});x.example=a.join('\n');x.updatedAt=now();persist();send(x)};
 const idiomLines=x=>String(x.idioms||'').split('\n').map(z=>z.trim()).filter(Boolean);
 const idiomParse=l=>{const m=l.replace(/^[-•*]\s*/,'').match(/^(.{2,60}?)\s*[:：]\s*(.+)$/);return m?{ph:m[1].trim(),mean:m[2].trim()}:{ph:'',mean:l.replace(/^[-•*]\s*/,'')}};
 function collMean(x,y){const n=norm(y.phrase);for(const l of idiomLines(x)){const p=idiomParse(l);if(p.ph&&norm(p.ph)===n)return p.mean}return''}
@@ -1021,7 +1021,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-s6]');if(!
  refreshDetail();render()});
 /* ---------- ví dụ của từ: thêm / sửa / xóa ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-w6]');if(!b)return;const[a,id,k]=b.dataset.w6.split(':'),x=items.find(z=>z.id===id);if(!x)return;const arr=exLines(x);
- if(a==='exadd'){const inp=$$('w6Ex'),v=(inp&&inp.value||'').trim();if(!v)return;if(arr.some(z=>norm(z.split(' — ')[0])===norm(v)))return alert('Ví dụ này đã có.');arr.push(v);setEx(x,arr)}
+ if(a==='exadd'){const inp=$$('w6Ex'),v=(inp&&inp.value||'').trim();if(!v)return;if(arr.some(z=>textKey6(z.split(' — ')[0])===textKey6(v)))return alert('Ví dụ này đã có.');arr.push(v);setEx(x,arr)}
  else if(a==='exedit'){const v=prompt('Sửa câu ví dụ:',arr[+k]||'');if(v===null)return;if(v.trim())arr[+k]=v.trim();else arr.splice(+k,1);setEx(x,arr)}
  else if(a==='exdel'){if(!confirm('Xóa câu ví dụ này?'))return;arr.splice(+k,1);setEx(x,arr)}
  refreshDetail();render()});
