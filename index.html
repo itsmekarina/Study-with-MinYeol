@@ -726,7 +726,7 @@ const CP={prev:()=>{const t=$$('cpText').value.trim();if(!t)return status('cpSta
  lesson:()=>{nav('lessons');L().ACT.tab('lessons');L().ACT.lnew();$$('impT').value=P.text;L().ACT.parse()},
  save:async()=>{let n=0,occ=0;const src=$('cpSrc').value,ttl=$('cpTitle').value.trim(),chapter=$('cpChapter')?$('cpChapter').value.trim():'',pageUrl=$('cpUrl')?$('cpUrl').value.trim():'',multi=P.items.length>1,orig=P.text.trim().slice(0,5000);
   for(const it of P.items){if(!it.on)continue;const tx=it.text.trim();if(!tx)continue;
-   if(it.type==='vocab'||it.type==='sentence'){const ex=existOf({text:tx,type:it.type});if(ex){logEv(ex.id,{type:'read',original:multi?orig:'',note:[src,ttl].filter(Boolean).join(' · ')});occ++}else{const x=await add(tx,detect(tx)||'en',src||'Khác',ttl,chapter,orig,pageUrl,'','cpStatus');if(x)n++}}
+   if(it.type==='vocab'||it.type==='sentence'){const ex=existOf({text:tx,type:it.type});if(ex){logEv(ex.id,{type:'read',original:orig,note:[src,ttl,chapter].filter(Boolean).join(' · '),url:pageUrl});occ++}else{const x=await add(tx,detect(tx)||'en',src||'Khác',ttl,chapter,orig,pageUrl,'','cpStatus');if(x)n++}}
    else{const o={skill:'General',source:[src,ttl,chapter].filter(Boolean).join(' · '),title:ttl,chapter,url:pageUrl,note:pageUrl?'Nguồn: '+pageUrl:''};if(it.type==='question'){o.question=tx;o.proc='noans'}else{o.idea=tx;o.proc='new';if(it.type==='note')o.note='Loại: Ghi chú chung'}I().create(o);n++}}
   status('cpStatus','Đã lưu '+n+' mục mới'+(occ?', ghi nhận '+occ+' lần gặp mới của từ đã có':'')+'. Từ vựng mới nằm trong Hộp thư; câu hỏi/ý tưởng nằm ở IELTS → Ideas.','ok');$$('cpText').value='';P.items=[];$$('cpPrev').innerHTML=''}};
 /* ---------- Trang đọc bài học ---------- */
@@ -1114,11 +1114,13 @@ function titleOptions(){
  const dl=$('sourceTitleSuggestions');if(dl)dl.innerHTML=[...vals].sort((a,b)=>a.localeCompare(b)).map(v=>'<option value="'+esc(v)+'"></option>').join('');
 }
 titleOptions();
+const splitCtl=$('qSave')&&$('qSave').parentElement;if(splitCtl){splitCtl.insertAdjacentHTML('beforebegin','<label class="chk small" style="margin:8px 0"><input type="checkbox" id="autoSplitToggle" checked> Lưu cả câu/đoạn và tự tách tối đa 12 từ đơn mới vào Hộp thư</label>');const c=$('autoSplitToggle');c.checked=localStorage.getItem('spmAutoSplitRead')!=='0';c.addEventListener('change',()=>localStorage.setItem('spmAutoSplitRead',c.checked?'1':'0'))}
 /* Remember unique quote/source records through the existing synced reading events. */
 const textKey6=v=>String(v||'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 const _addSenseDedupe=addSense;
-addSense=function(x,f){let a=materialize(x),ctx=String(f.context||'').trim(),txt=String(f.text||x.phrase).trim(),k=textKey6(ctx||txt),dup=a.find(z=>textKey6(z.context||z.text)===k);
+addSense=function(x,f){let a=materialize(x),ctx=String(f.context||'').trim(),txt=String(f.text||x.phrase).trim(),dup=a.find(z=>textKey6(z.context)===textKey6(ctx)&&textKey6(z.text)===textKey6(txt));
  if(dup){if(f.meaning&&!dup.meaning)dup.meaning=f.meaning;for(const q of ['source','title','chapter','url'])if(f[q]&&!dup[q])dup[q]=f[q];saveS(x,a);return{s:dup,isNew:false}}
+ if(!ctx&&!f.meaning){for(const q of ['source','title','chapter','url'])if(f[q]&&!x[q])x[q]=f[q];return{s:null,isNew:false}}
  return _addSenseDedupe(x,f)};
 const _logEvDedupe=logEv;
 logEv=function(wordId,f){if(f&&f.type==='read'&&f.original){const k=textKey6(f.original),note=textKey6(f.note),url=String(f.url||'').trim();const d=events.find(e=>!e.deleted&&e.wordId===wordId&&e.type==='read'&&textKey6(e.original)===k&&textKey6(e.note)===note&&String(e.url||'').trim()===url);if(d)return d}return _logEvDedupe(wordId,f)};
@@ -1154,6 +1156,9 @@ savedOf=function(k){if(k!=='read')return _savedOfReading(k);
  if(window.IDEAS)IDEAS._A.ideas.filter(d=>!d.deleted).forEach(d=>{const p=String(d.idea||d.answer||'').trim();if(p.length>120)push(p,[d.source,d.title,d.chapter].filter(Boolean).join(' · '),d.url,'i:'+d.id)});
  return[...M.values()].sort((a,b)=>b.s.localeCompare(a.s));
 };
+const _CPsaveTitles=CP.save;CP.save=async function(...a){const v=await _CPsaveTitles(...a);titleOptions();return v};
+const _libRelatedNoDup=libRelated;
+libRelated=function(){_libRelatedNoDup();const el=$('libRel');if(!el)return;const ss=[...el.querySelectorAll('.sec')],sent=ss.find(z=>(z.querySelector('h4')?.textContent||'').includes('Mẫu câu & ví dụ đã lưu')),quotes=ss.find(z=>(z.querySelector('h4')?.textContent||'').includes('Quotes & câu gốc'));if(!sent||!quotes)return;const keys=new Set([...sent.querySelectorAll('.ev b')].map(b=>textKey6(b.textContent)));const rows=[...quotes.querySelectorAll('.ev')];rows.forEach(z=>{const t=(z.querySelector('span')?.textContent||'').replace(/^“|”$/g,'');if(keys.has(textKey6(t)))z.remove()});const left=quotes.querySelectorAll('.ev').length;if(!left)quotes.remove();else{const h=quotes.querySelector('h4');if(h)h.textContent=h.textContent.replace(/\(\d+\)/,'('+left+')')}};
 const _exRenderStats=exRender;
 exRender=function(){_exRenderStats();const v=$('exploreView');if(!v)return;const A=new Map(),add=(title,type,key)=>{title=String(title||'').trim();if(!title||title==='Dữ liệu gốc')return;const n=textKey6(title),z=A.get(n)||{title,words:new Set(),passages:new Set()};if(type==='word')z.words.add(key);else z.passages.add(key);A.set(n,z)};
  items.forEach(x=>{if(isV(x))add(x.title,'word',x.id);if(x.kind==='Mẫu câu')add(x.title,'passage',textKey6(x.phrase))});
