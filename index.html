@@ -1168,4 +1168,110 @@ SX.setRender(function(){_exRenderStats();const v=$('exploreView');if(!v)return;c
 render();
 })();
 </script>
+
+<style id="minyeol-playful-redesign">
+:root{--ink:#242622;--muted:#68716c;--line:#242622;--bg:#f1f3f1;--purple:#38b5a9;--lav:#e4f6f1;--mint:#d8f1e8;--rose:#ffefed;--warn:#fff3b8;--white:#fff;--serif:"Be Vietnam Pro",system-ui,sans-serif;color-scheme:light}
+body{font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);background-color:var(--bg);background-image:radial-gradient(circle,#fff 0 6px,transparent 7px),radial-gradient(circle,#fff 0 3px,transparent 4px);background-size:180px 180px,260px 260px;background-position:20px 10px,100px 90px}
+h1,h2,h3,.review-phrase,.d-phrase,.item-card strong,.stat strong{font-family:"Be Vietnam Pro",system-ui,sans-serif;letter-spacing:-.025em}
+header{background:#f8faf8f2;border-bottom:1.5px solid #242622;box-shadow:0 3px 0 #24262212}
+.brand .icon{width:42px;height:42px;display:grid;place-items:center;background:#fff;border:1.5px solid var(--ink);border-radius:15px;box-shadow:2px 3px 0 var(--ink)}
+.brand h1{font-size:19px}.brand p{font-size:11px}
+.layout{max-width:1320px;gap:20px;padding:18px}
+nav{position:sticky;top:86px;align-self:start;padding:10px;background:#fff;border:1.5px solid var(--ink);border-radius:22px;box-shadow:3px 4px 0 #24262218}
+nav button{border-radius:14px;color:var(--ink);transition:transform .16s,background .16s}
+nav button.active,nav button:hover{background:var(--mint);color:var(--ink);transform:translateX(2px)}
+nav button[data-view=quick],nav button[data-view=quick].active{background:var(--purple);color:#fff;border:1.5px solid var(--ink);box-shadow:2px 3px 0 var(--ink)}
+nav button i{font-style:normal;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:9px;background:#f2f3f1}
+.nav-note{border-top:1px dashed #b9c2bd;margin-top:8px}
+.panel,.stat,.item-card,.example,.quickbox,.review-card,.lscard,.excard,.rd-toc,.notice{border:1.5px solid var(--ink);border-radius:22px;box-shadow:2px 3px 0 #24262212}
+.panel{padding:18px;background:#fff;margin-bottom:16px}
+.panel h3{font-size:19px}
+button{background:var(--purple);color:#102421;border:1.5px solid var(--ink);border-radius:16px;box-shadow:0 2px 0 #24262220;transition:transform .14s,box-shadow .14s}
+button:hover{transform:translateY(-1px);box-shadow:0 4px 0 #24262220}
+button:active{transform:translateY(1px);box-shadow:none}
+button.secondary{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+button.soft{background:var(--lav);color:#165f57;border:1.5px solid var(--ink)}
+button.danger{background:var(--rose);color:#8c322a;border:1.5px solid #9d5148}
+button.icon{background:var(--warn);color:var(--ink);border:1px solid var(--ink)}
+input,textarea,select{background:#fff;color:var(--ink);border:1.5px solid #505550;border-radius:14px;outline-color:#38b5a9}
+input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px #38b5a933}
+.quickbox{background:#f2fbf8;border-style:solid}
+.item-card{background:#fff;border-radius:18px}
+.item-card:nth-child(3n+1){background:#f0faf6}
+.statbar span,.stat{background:#fff!important;border:1.5px solid var(--ink);border-radius:18px;padding:10px 13px;box-shadow:1px 2px 0 #24262212}
+.statbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.statbar span:nth-child(1){background:#e3f6f1!important}.statbar span:nth-child(2){background:#fff4b8!important}.statbar span:nth-child(3){background:#ffeceb!important}.statbar span:nth-child(4){background:#edf0ff!important}
+.pill{background:#fff0a8;color:#403916;border:1px solid var(--ink);border-radius:99px}
+.pill.sentence{background:#d8f1e8;color:#175c50}.pill.pending{background:#fff3b8;color:#665016}
+th{background:#e8f6f2;color:#2b3833}th,td{border-color:#dce3df}
+.hero{background:#e0f6f1;border:1.5px solid var(--ink);border-radius:24px;box-shadow:3px 4px 0 #24262218}
+.hero h2{font-size:25px}
+.review-card{background:linear-gradient(145deg,#42b9ad,#65c9be);color:#142d2a}
+.review-phrase{font-size:27px}
+.review-meaning{color:#163e38}
+.example:nth-of-type(odd){background:#fff9d9}
+mark.hl{background:#ffe648;color:#1e211d;border-radius:5px;padding:0 3px}
+.empty{color:var(--muted)}
+.welcome-hero{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 14px;padding:24px 24px 22px;background:#fff;border:1.5px solid var(--ink);border-radius:25px;box-shadow:3px 4px 0 #24262218}
+.welcome-hero:before{content:"";position:absolute;width:170px;height:170px;right:35px;top:-86px;border-radius:50%;background:#fff3b8;border:1.5px solid var(--ink)}
+.welcome-hero:after{content:"";position:absolute;width:95px;height:95px;right:105px;bottom:-60px;border-radius:50%;background:#d8f1e8;border:1.5px solid var(--ink)}
+.welcome-copy{position:relative;z-index:1;max-width:570px}
+.welcome-kicker{display:inline-block;background:#ffefad;border:1px solid var(--ink);border-radius:99px;padding:4px 10px;font-size:10px;font-weight:800;letter-spacing:.1em}
+.welcome-hero h2{font-size:clamp(24px,4vw,34px);line-height:1.15;margin:11px 0 6px}
+.welcome-hero p{color:var(--muted);margin:0}
+.welcome-art{position:relative;z-index:1;display:grid;place-items:center;width:94px;height:94px;border:1.5px solid var(--ink);border-radius:30px;background:#48b7ab;box-shadow:3px 4px 0 var(--ink);font-size:45px;transform:rotate(5deg)}
+.welcome-art:after{content:"✦";position:absolute;right:-11px;top:-16px;color:#e6a23e;font-size:28px}
+#homeView>.panel:first-of-type{background:#e5f7f2}
+#homeView>.panel:nth-of-type(2){background:#fff4f0}
+.toolbar input{min-width:150px}
+dialog{border:1.5px solid var(--ink)!important;border-radius:22px!important;box-shadow:0 14px 50px #1113!important}
+:focus-visible{outline:3px solid #efca24;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+@media(max-width:850px){
+ body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+ .layout{display:block;max-width:760px;padding:12px 12px 18px}
+ nav#nav{position:fixed;z-index:40;left:8px;right:8px;bottom:max(7px,env(safe-area-inset-bottom));top:auto;align-self:auto;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:0;padding:5px 4px calc(5px + env(safe-area-inset-bottom));overflow:visible;border-radius:21px;background:#fff;border:1.5px solid var(--ink);box-shadow:0 5px 18px #20252026}
+ #nav button{position:relative;display:flex;min-width:0;flex-direction:column;justify-content:center;align-items:center;gap:1px;padding:4px 1px;border:0;background:transparent;box-shadow:none;border-radius:13px;color:#454b46;text-align:center;white-space:normal;font-size:9px;line-height:1.05}
+ #nav button i{width:24px;height:23px;background:transparent;font-size:17px}
+ #nav button span:not(.pill){display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+ #nav button.active{background:#e2f5f0;color:#163d37;transform:none}
+ #nav button[data-view=quick],#nav button[data-view=quick].active{transform:translateY(-9px);background:#42b7ab;color:#102c28;border:1.5px solid var(--ink);box-shadow:0 4px 0 #24262235}
+ #nav button[data-view=review] .pill{position:absolute;top:-3px;right:-2px;padding:2px 4px;font-size:8px;max-width:24px}
+ #nav .nav-note{display:none}
+ header{min-height:61px;padding:8px 13px}
+ .brand .icon{width:36px;height:36px;font-size:22px}
+ .brand h1{font-size:16px}.brand p{font-size:10px}
+ .welcome-hero{min-height:150px;padding:20px}
+ .welcome-art{width:70px;height:70px;border-radius:23px;font-size:34px}
+ .statbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .statbar span{font-size:12px}
+}
+@media(max-width:390px){
+ #nav button{font-size:8px;padding-left:0;padding-right:0}
+ #nav button i{font-size:16px}
+ .layout{padding-left:9px;padding-right:9px}
+ .welcome-art{width:58px;height:58px;font-size:29px}
+ .welcome-hero{padding:17px}
+ .welcome-hero h2{font-size:23px}
+}
+@media(min-width:851px){.welcome-hero{margin-top:3px}.welcome-art{margin-right:16px}}
+[data-theme=dark]{--ink:#f3f3e9;--muted:#b4c1ba;--line:#4a5a55;--bg:#16201e;--purple:#52c3b4;--lav:#263d38;--mint:#263f39;--rose:#432e2c;--warn:#474020;--white:#202b28;color-scheme:dark}
+[data-theme=dark] body{background-color:#16201e;background-image:radial-gradient(circle,#26302d 0 6px,transparent 7px),radial-gradient(circle,#222b29 0 3px,transparent 4px)}
+[data-theme=dark] header,[data-theme=dark] nav#nav,[data-theme=dark] .panel,[data-theme=dark] .item-card,[data-theme=dark] .welcome-hero,[data-theme=dark] .statbar span,[data-theme=dark] input,[data-theme=dark] textarea,[data-theme=dark] select,[data-theme=dark] button.secondary,[data-theme=dark] dialog{background:#202b28;color:var(--ink);border-color:#56635e}
+[data-theme=dark] .welcome-hero:before{background:#4a4221}
+[data-theme=dark] .welcome-hero:after{background:#263f39}
+[data-theme=dark] .quickbox,[data-theme=dark] .review-card{background:#274a43;color:var(--ink)}
+[data-theme=dark] #nav button.active{background:#314943;color:#f1f1e6}
+[data-theme=dark] #nav button[data-view=quick], [data-theme=dark] #nav button[data-view=quick].active{background:#52c3b4;color:#102c28}
+[data-theme=dark] .statbar span:nth-child(1),[data-theme=dark] .statbar span:nth-child(2),[data-theme=dark] .statbar span:nth-child(3),[data-theme=dark] .statbar span:nth-child(4){background:#2a3935!important}
+[data-theme=dark] .welcome-kicker{background:#4a4221}
+[data-theme=dark] .item-card:nth-child(3n+1){background:#263834}
+</style>
+<script>
+(()=>{const home=document.getElementById('homeView');if(home&&!document.getElementById('welcomeHero')){home.insertAdjacentHTML('afterbegin','<section class="welcome-hero" id="welcomeHero"><div class="welcome-copy"><span class="welcome-kicker">✦ STUDY WITH MINYEOL</span><h2>Hôm nay mình học gì nhỉ?</h2><p>Lưu một từ hay, giữ lại cả câu chuyện.</p></div><div class="welcome-art" aria-hidden="true">📖</div></section>')}
+const labels={home:'Tổng quan',quick:'Lưu nhanh',inbox:'Hộp thư',library:'Kho từ vựng',review:'Flashcard',lessons:'IELTS',explore:'Khám phá',settings:'Cài đặt'};
+document.querySelectorAll('#nav [data-view]').forEach(b=>{const k=b.dataset.view;b.title=labels[k]||b.textContent.trim();b.setAttribute('aria-label',labels[k]||b.textContent.trim())});
+})();
+</script>
+
 </body></html>
