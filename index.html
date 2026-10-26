@@ -796,6 +796,7 @@ $$('readerView').addEventListener('change',e=>{if(e.target.id==='rdStat'){const 
 $$('lsDlg').addEventListener('close',()=>RD.refresh());
 /* chuyển hướng "mở bài" sang trang đọc; giữ nguyên các hành động cũ */
 const A0=L().ACT,_lp=A0.lprac,_ld=A0.ldel,_lc=A0.lcreate;A0.ledit=id=>RD.edit(id);A0.lcreate=()=>{const n0=L().A.lessons.length;_lc();const Z=L().A.lessons;if(Z.length>n0){const id=Z[Z.length-1].id;setTimeout(()=>linkLesson(id),300)}};A0.lopen=RD.open;A0.lprac=id=>{rdId='';$$('readerView').classList.add('hidden');setView('lessons');_lp(id)};A0.ldel=id=>{_ld(id);RD.refresh()};
+window.StudyExplore={TY,SRC,EX,CP,getSaved:()=>savedOf,setSaved:f=>{savedOf=f},getRender:()=>exRender,setRender:f=>{exRender=f}};
 render();
 })();
 </script>
@@ -1097,10 +1098,10 @@ document.head.insertAdjacentHTML('beforeend',`<style>dialog{overscroll-behavior:
 const _dhMobile=detailHtml;
 detailHtml=function(x){let h=_dhMobile(x);h=h.replace('<div class="d-head">','<div class="d-head"><button class="icon" type="button" data-close aria-label="Đóng">✕</button>');return h};
 /* Add source metadata fields to the compact Explore capture form. */
-const _exRenderMeta=exRender;
-exRender=function(){_exRenderMeta();const row=$('exCap')&&$('exCap').parentElement.querySelector('.row');if(row&&!$('exCapTitle'))row.insertAdjacentHTML('afterbegin','<input id="exCapTitle" list="sourceTitleSuggestions" placeholder="Tên truyện / phim" style="max-width:190px"><input id="exCapChapter" placeholder="Tập / chương" style="max-width:140px"><input id="exCapUrl" type="url" placeholder="URL nguồn" style="max-width:220px">');};
-const _capOld=EX.cap;
-EX.cap=async()=>{if($('exCapTitle'))$('cpTitle').value=$('exCapTitle').value.trim();if($('exCapChapter')&&$('cpChapter'))$('cpChapter').value=$('exCapChapter').value.trim();if($('exCapUrl')&&$('cpUrl'))$('cpUrl').value=$('exCapUrl').value.trim();return _capOld()};
+const SX=window.StudyExplore,_exRenderMeta=SX.getRender();
+SX.setRender(function(){_exRenderMeta();const row=$('exCap')&&$('exCap').parentElement.querySelector('.row');if(row&&!$('exCapTitle'))row.insertAdjacentHTML('afterbegin','<input id="exCapTitle" list="sourceTitleSuggestions" placeholder="Tên truyện / phim" style="max-width:190px"><input id="exCapChapter" placeholder="Tập / chương" style="max-width:140px"><input id="exCapUrl" type="url" placeholder="URL nguồn" style="max-width:220px">');});
+const _capOld=SX.EX.cap;
+SX.EX.cap=async()=>{if($('exCapTitle'))$('cpTitle').value=$('exCapTitle').value.trim();if($('exCapChapter')&&$('cpChapter'))$('cpChapter').value=$('exCapChapter').value.trim();if($('exCapUrl')&&$('cpUrl'))$('cpUrl').value=$('exCapUrl').value.trim();return _capOld()};
 document.body.insertAdjacentHTML('beforeend','<datalist id="sourceTitleSuggestions"></datalist>');
 function titleOptions(){
  const vals=new Set(),addTitle=v=>{v=String(v||'').trim();if(v&&v.length<160)vals.add(v)};
@@ -1144,19 +1145,19 @@ add=async function(phrase,lang,source,title='',chapter='',context='',pageUrl='',
  titleOptions();return x;
 };
 /* One Explore card for unique reading excerpts and a title-level activity summary. */
-TY.push({k:'read',ic:'📚',n:'Truyện / phim đã lưu',d:'Câu, đoạn, từ và lần gặp được gom theo nguồn để tìm lại nhanh.',s:[0,1,3,4,5],ex:'Đoạn trích đã lưu · tập / chương · từ vựng liên quan',f:'Câu gốc, nguồn, vị trí, số từ và số đoạn',st:'Khám phá → Truyện / phim',go:'library'});
-const _savedOfReading=savedOf;
-savedOf=function(k){if(k!=='read')return _savedOfReading(k);
+SX.TY.push({k:'read',ic:'📚',n:'Truyện / phim đã lưu',d:'Câu, đoạn, từ và lần gặp được gom theo nguồn để tìm lại nhanh.',s:[0,1,3,4,5],ex:'Đoạn trích đã lưu · tập / chương · từ vựng liên quan',f:'Câu gốc, nguồn, vị trí, số từ và số đoạn',st:'Khám phá → Truyện / phim',go:'library'});
+const _savedOfReading=SX.getSaved();
+SX.setSaved(function(k){if(k!=='read')return _savedOfReading(k);
  const M=new Map(),push=(passage,note,url,open)=>{passage=String(passage||'').trim();if(!passage)return;const key=textKey6(passage)+'|'+textKey6(note)+'|'+String(url||'').trim();if(!M.has(key))M.set(key,{t:passage,s:[note,url].filter(Boolean).join(' · '),o:open||''})};
  events.filter(e=>!e.deleted&&e.original).forEach(e=>{const w=items.find(x=>x.id===e.wordId);push(e.original,e.note,e.url,w?'w:'+w.id:'')});
  if(window.IDEAS)IDEAS._A.ideas.filter(d=>!d.deleted).forEach(d=>{const p=String(d.idea||d.answer||'').trim();if(p.length>120)push(p,[d.source,d.title,d.chapter].filter(Boolean).join(' · '),d.url,'i:'+d.id)});
  return[...M.values()].sort((a,b)=>b.s.localeCompare(a.s));
 };
-const _CPsaveTitles=CP.save;CP.save=async function(...a){const v=await _CPsaveTitles(...a);titleOptions();return v};
+const _CPsaveTitles=SX.CP.save;SX.CP.save=async function(...a){const v=await _CPsaveTitles(...a);titleOptions();return v};
 const _libRelatedNoDup=libRelated;
 libRelated=function(){_libRelatedNoDup();const el=$('libRel');if(!el)return;const ss=[...el.querySelectorAll('.sec')],sent=ss.find(z=>(z.querySelector('h4')?.textContent||'').includes('Mẫu câu & ví dụ đã lưu')),quotes=ss.find(z=>(z.querySelector('h4')?.textContent||'').includes('Quotes & câu gốc'));if(!sent||!quotes)return;const keys=new Set([...sent.querySelectorAll('.ev b')].map(b=>textKey6(b.textContent)));const rows=[...quotes.querySelectorAll('.ev')];rows.forEach(z=>{const t=(z.querySelector('span')?.textContent||'').replace(/^“|”$/g,'');if(keys.has(textKey6(t)))z.remove()});const left=quotes.querySelectorAll('.ev').length;if(!left)quotes.remove();else{const h=quotes.querySelector('h4');if(h)h.textContent=h.textContent.replace(/\(\d+\)/,'('+left+')')}};
-const _exRenderStats=exRender;
-exRender=function(){_exRenderStats();const v=$('exploreView');if(!v)return;const A=new Map(),add=(title,type,key)=>{title=String(title||'').trim();if(!title||title==='Dữ liệu gốc')return;const n=textKey6(title),z=A.get(n)||{title,words:new Set(),passages:new Set()};if(type==='word')z.words.add(key);else z.passages.add(key);A.set(n,z)};
+const _exRenderStats=SX.getRender();
+SX.setRender(function(){_exRenderStats();const v=$('exploreView');if(!v)return;const A=new Map(),add=(title,type,key)=>{title=String(title||'').trim();if(!title||title==='Dữ liệu gốc')return;const n=textKey6(title),z=A.get(n)||{title,words:new Set(),passages:new Set()};if(type==='word')z.words.add(key);else z.passages.add(key);A.set(n,z)};
  items.forEach(x=>{if(isV(x))add(x.title,'word',x.id);if(x.kind==='Mẫu câu')add(x.title,'passage',textKey6(x.phrase))});
  events.filter(e=>!e.deleted&&e.original).forEach(e=>{const title=String(e.note||'').split(' · ')[1]||'';add(title,'passage',textKey6(e.original))});
  if(window.IDEAS)IDEAS._A.ideas.filter(d=>!d.deleted&&String(d.source||'').includes(' · ')).forEach(d=>add(String(d.source).split(' · ')[1],d.idea||d.answer?'passage':'word',d.id));
