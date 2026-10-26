@@ -1117,7 +1117,7 @@ const textKey6=v=>String(v||'').normalize('NFKC').toLowerCase().replace(/[^\p{L}
 const _addSenseDedupe=addSense;
 addSense=function(x,f){let a=materialize(x),ctx=String(f.context||'').trim(),txt=String(f.text||x.phrase).trim(),dup=a.find(z=>textKey6(z.context)===textKey6(ctx)&&textKey6(z.text)===textKey6(txt));
  if(dup){if(f.meaning&&!dup.meaning)dup.meaning=f.meaning;for(const q of ['source','title','chapter','url'])if(f[q]&&!dup[q])dup[q]=f[q];saveS(x,a);return{s:dup,isNew:false}}
- if(!ctx&&!f.meaning){for(const q of ['source','title','chapter','url'])if(f[q]&&!x[q])x[q]=f[q];return{s:null,isNew:false}}
+ if(!ctx&&!f.meaning){let changed=false;for(const q of ['source','title','chapter','url'])if(f[q]&&!x[q]){x[q]=f[q];changed=true}if(changed){x.updatedAt=now();persist();send(x)}return{s:null,isNew:false}}
  return _addSenseDedupe(x,f)};
 const _logEvDedupe=logEv;
 logEv=function(wordId,f){if(f&&f.type==='read'&&f.original){const k=textKey6(f.original),note=textKey6(f.note),url=String(f.url||'').trim();const d=events.find(e=>!e.deleted&&e.wordId===wordId&&e.type==='read'&&textKey6(e.original)===k&&textKey6(e.note)===note&&String(e.url||'').trim()===url);if(d)return d}return _logEvDedupe(wordId,f)};
