@@ -1152,7 +1152,7 @@ SX.setSaved(function(k){if(k!=='read')return _savedOfReading(k);
  events.filter(e=>!e.deleted&&e.original).forEach(e=>{const w=items.find(x=>x.id===e.wordId);push(e.original,e.note,e.url,w?'w:'+w.id:'')});
  if(window.IDEAS)IDEAS._A.ideas.filter(d=>!d.deleted).forEach(d=>{const p=String(d.idea||d.answer||'').trim();if(p.length>120)push(p,[d.source,d.title,d.chapter].filter(Boolean).join(' · '),d.url,'i:'+d.id)});
  return[...M.values()].sort((a,b)=>b.s.localeCompare(a.s));
-};
+});
 const _CPsaveTitles=SX.CP.save;SX.CP.save=async function(...a){const v=await _CPsaveTitles(...a);titleOptions();return v};
 const _libRelatedNoDup=libRelated;
 libRelated=function(){_libRelatedNoDup();const el=$('libRel');if(!el)return;const ss=[...el.querySelectorAll('.sec')],sent=ss.find(z=>(z.querySelector('h4')?.textContent||'').includes('Mẫu câu & ví dụ đã lưu')),quotes=ss.find(z=>(z.querySelector('h4')?.textContent||'').includes('Quotes & câu gốc'));if(!sent||!quotes)return;const keys=new Set([...sent.querySelectorAll('.ev b')].map(b=>textKey6(b.textContent)));const rows=[...quotes.querySelectorAll('.ev')];rows.forEach(z=>{const t=(z.querySelector('span')?.textContent||'').replace(/^“|”$/g,'');if(keys.has(textKey6(t)))z.remove()});const left=quotes.querySelectorAll('.ev').length;if(!left)quotes.remove();else{const h=quotes.querySelector('h4');if(h)h.textContent=h.textContent.replace(/\(\d+\)/,'('+left+')')}};
@@ -1163,7 +1163,7 @@ SX.setRender(function(){_exRenderStats();const v=$('exploreView');if(!v)return;c
  if(window.IDEAS)IDEAS._A.ideas.filter(d=>!d.deleted&&String(d.source||'').includes(' · ')).forEach(d=>add(String(d.source).split(' · ')[1],d.idea||d.answer?'passage':'word',d.id));
  if(A.size){const rows=[...A.values()].map(z=>({title:z.title,words:z.words.size,passages:z.passages.size,score:z.words.size+z.passages.size})).sort((a,b)=>b.score-a.score).slice(0,8);
   const box=document.createElement('div');box.className='panel';box.style.margin='10px 0';box.innerHTML='<h3>🏆 Nguồn đọc nhiều nhất</h3><p class="small">Xếp theo số mục đã lưu; số từ tính theo mục từ vựng riêng lẻ.</p>'+rows.map((z,i)=>'<div class="ev"><b>'+(i+1)+'. '+esc(z.title)+'</b><div class="small">🔤 '+z.words+' từ · 📖 '+z.passages+' câu / đoạn</div></div>').join('');const grid=v.querySelector('.exg');if(grid)v.insertBefore(box,grid)}
-};
+});
 
 render();
 })();
