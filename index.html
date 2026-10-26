@@ -169,7 +169,7 @@ button.chip.topic{border:1px solid var(--line);background:#fffdf9;color:var(--in
 <dialog id="idDlg" aria-label="Ideas"></dialog>
 <dialog id="evDlg" aria-label="Ghi nhận lần gặp"><h3 id="evTitle">Ghi nhận lần gặp mới</h3><p class="small" id="evWord"></p><input type="hidden" id="evId"><input type="hidden" id="evWordId"><div class="field"><label>Loại hoạt động</label><select id="evType"></select></div><div class="field"><label>Kết quả ghi nhớ</label><div class="seg" id="evRes"></div></div><div class="field"><label>Ngữ cảnh / câu gặp (câu gốc từ tài liệu)</label><textarea id="evOrig"></textarea></div><div class="field"><label>Câu tôi tự viết</label><textarea id="evMine"></textarea></div><details class="more"><summary>+ Mở rộng: câu đã sửa, lỗi, ghi chú, nguồn</summary><div class="field"><label>Phiên bản câu đã sửa</label><textarea id="evFixed"></textarea></div><div class="field"><label>Lỗi đã mắc & giải thích ngắn</label><textarea id="evErr"></textarea></div><div class="field"><label>Ghi chú cá nhân</label><textarea id="evNote"></textarea></div><div class="field"><label>Link nguồn</label><input id="evUrl" placeholder="https://"></div><label class="chk"><input type="checkbox" id="evCheck"> Đánh dấu câu cần kiểm tra</label></details><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="secondary" id="evCancel" type="button">Hủy</button><button id="evSave" type="button">Lưu</button></div></dialog>
 <script>
-const $=id=>document.getElementById(id), KEY='englishPocketV3', URLKEY='englishPocketV3Url';
+const $=id=>document.getElementById(id), KEY='englishPocketV3', URLKEY='englishPocketV3Url', DEFAULT_SCRIPT_URL='https://script.google.com/macros/s/AKfycbzV7SpkKPzUiUO8VruUIgIQ30IPx7DjwYlaBM4UCMsJ7TOxa792kk2JKi7x17h3FKILIw/exec';
 let items=[], view='home', lastView='inbox', deck=[], deckIndex=0, revealed=false, reviewed=0;
 const langs={en:'Tiếng Anh',zh:'Tiếng Trung',ja:'Tiếng Nhật',ko:'Tiếng Hàn',other:'Khác'};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -272,7 +272,7 @@ function aiPrompt(){const ph=$('ePhrase').value.trim(),cx=$('eContext').value.tr
 const hi=(ctx,ph)=>{const c=esc(ctx),p=esc(ph),i=p?c.toLowerCase().indexOf(p.toLowerCase()):-1;return i<0?c:c.slice(0,i)+'<mark class="hl">'+c.slice(i,i+p.length)+'</mark>'+c.slice(i+p.length)};
 function detect(s){return /[\u3040-\u30ff]/.test(s)?'ja':/[\uac00-\ud7af]/.test(s)?'ko':/[\u4e00-\u9fff]/.test(s)?'zh':''}
 function speak(x){if(!('speechSynthesis' in window))return alert('Trình duyệt chưa hỗ trợ phát âm.');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(x.phrase);if(TTS[x.lang])u.lang=TTS[x.lang];u.rate=.9;speechSynthesis.speak(u)}
-function url(){return localStorage.getItem(URLKEY)||''}
+function url(){const saved=localStorage.getItem(URLKEY);return saved===null?DEFAULT_SCRIPT_URL:saved}
 function status(id,text,type=''){let el=$(id);if(el){el.textContent=text;el.className='status '+type}}
 const clean=x=>{const{_dirty,srs,...r}=x;return r};
 async function send(x){if(!url())return {offline:true};try{let r=await fetch(url(),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'save',token:tok(),entry:clean(x)})});let d=await r.json();if(d.ok)delete x._dirty;else x._dirty=true;persist();return d}catch(e){x._dirty=true;persist();return {ok:false,error:'Chưa đồng bộ được; dữ liệu vẫn còn trên thiết bị.'}}}
