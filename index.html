@@ -1093,11 +1093,7 @@ setTimeout(()=>{if(url()&&localStorage.getItem('spmFullPush6')!==url())fullPush(
 window.V6={addSense,splitColl,collocsOf,allSenses,regOf,vtypeOf,drive,fullPush};
 
 /* ===== Mobile reading flow, source suggestions, dedupe, and saved reading index ===== */
-document.head.insertAdjacentHTML('beforeend','<style>
-dialog{overscroll-behavior:contain}
-dialog .d-head{position:sticky;top:-22px;z-index:4;background:var(--panel,#fffdf9);padding:8px 0}
-@media(max-width:600px){dialog{position:fixed;inset:auto 0 0!important;margin:0!important;width:100%!important;max-width:none!important;max-height:88dvh!important;padding:14px 14px calc(18px + env(safe-area-inset-bottom))!important;border-radius:20px 20px 0 0!important;overflow:auto!important}.d-head{top:-14px!important}.d-head .d-phrase{font-size:23px}}
-</style>');
+document.head.insertAdjacentHTML('beforeend',`<style>dialog{overscroll-behavior:contain}dialog .d-head{position:sticky;top:-22px;z-index:4;background:var(--panel,#fffdf9);padding:8px 0}@media(max-width:600px){dialog{position:fixed;inset:auto 0 0!important;margin:0!important;width:100%!important;max-width:none!important;max-height:88dvh!important;padding:14px 14px calc(18px + env(safe-area-inset-bottom))!important;border-radius:20px 20px 0 0!important;overflow:auto!important}.d-head{top:-14px!important}.d-head .d-phrase{font-size:23px}}</style>`);
 const _dhMobile=detailHtml;
 detailHtml=function(x){let h=_dhMobile(x);h=h.replace('<div class="d-head">','<div class="d-head"><button class="icon" type="button" data-close aria-label="Đóng">✕</button>');return h};
 /* Add source metadata fields to the compact Explore capture form. */
