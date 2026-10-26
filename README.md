@@ -1,5 +1,7 @@
 # Study with MinYeol
 
+🌐 **Mở website:** [Study with MinYeol](https://itsmekarina.github.io/Study-with-MinYeol/)
+
 Sổ tay ngoại ngữ cá nhân để lưu từ vựng, cụm từ, câu và đoạn trích từ truyện, phim, video hoặc bài học; sau đó ôn tập và tìm lại theo ngữ cảnh.
 
 ## Tính năng
